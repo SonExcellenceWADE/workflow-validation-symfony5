@@ -1,0 +1,57 @@
+framework:
+
+    workflows:
+
+        demande:
+            type: 'workflow'
+
+            audit_trail:
+                enabled: true
+
+            marking_store:
+                type: 'method'
+                property: 'status'
+
+            supports:
+                - App\Entity\Demande
+            initial_marking: request
+            
+            places:
+                - request
+                - dad_validation_pending
+                - dad_ok
+                - mum_validation_pending
+                - mum_ok
+                - order
+                - ordered
+                - received
+
+            transitions:
+                to_pending:
+                    from: request
+                    to:   [dad_validation_pending, mum_validation_pending]
+
+                to_dad_ok:
+                    guard: "is_granted('ROLE_DAD')"
+                    from: dad_validation_pending
+                    to: dad_ok
+
+                to_mum_ok:
+                    guard: "is_granted('ROLE_MUM')"
+                    from: mum_validation_pending
+                    to: mum_ok
+
+                to_order:
+                    guard: "is_granted('ROLE_PARENT')"
+                    from: [dad_ok, mum_ok]
+                    to:   order
+
+                to_ordered:
+                    guard: "is_granted('ROLE_PARENT')"
+                    from: order
+                    to:   ordered
+
+                to_received:
+                    guard: "is_granted('ROLE_PARENT')"
+                    from: ordered
+                    to:   received

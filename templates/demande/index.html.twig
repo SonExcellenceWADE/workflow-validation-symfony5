@@ -1,0 +1,24 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Workflow Demande{% endblock %}
+
+{% block body %}
+
+
+	{% for label, messages in app.flashes(['success']) %}
+		{% for message in messages %}
+			<div class="flash-{{ label }}">
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endfor %}
+
+    <h1> Nouveau Demande </h1>
+
+    {{ form_start(form) }}
+
+        {{ form_row(form.name)}} 
+
+    {{ form_end(form) }}
+{% endblock %}
