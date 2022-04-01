@@ -1,7 +1,7 @@
 version : "3.8"
 services:
 
- #Add image mysql in docker by Son Excellence WADE
+ #Add image Mysql in Docker by Son Excellence WADE
   db:
     image: mysql
     container_name: db_docker_workflow
@@ -14,7 +14,7 @@ services:
       - dev
 
 
-  #Add image phpmyadmin in docker by Son Excellence WADE
+  #Add image Phpmyadmin in Docker by Son Excellence WADE
   phpmyadmin:
     image: phpmyadmin
     container_name: phpmyadmin_docker_workflow
@@ -28,7 +28,7 @@ services:
     networks:
       - dev
 
-  #Add image maildev in docker by Son Excellence WADE
+  #Add image Maildev in Docker by Son Excellence WADE
   maildev:
     image: maildev/maildev
     container_name: maildev_docker_workflow
@@ -39,7 +39,7 @@ services:
     networks:
       - dev
 
-  #Add image php in docker by Son Excellence WADE
+  #Add image Php in Docker by Son Excellence WADE
   www:
     build: php
     container_name: www_docker_workflow
@@ -52,8 +52,47 @@ services:
     networks:
       - dev
 
+  #Add image Mariadb for Keycloak in Docker by Son Excellence WADE
+
+  keycloak_db:
+      image: mariadb:latest
+      container_name: keycloackdb_docker_workflow
+      environment:
+        - MARIADB_ROOT_PASSWORD=root
+        - MARIADB_DATABASE=keycloak
+      volumes:
+        - keycloak_db_data:/var/lib/mysql:rw
+
+  #Add image Keycloak in Docker by Son Excellence WADE
+
+  keycloak:
+      image: jboss/keycloak:latest
+      container_name: keycloack_docker_workflow
+      ports:
+        - target: 8080
+          published: 8080
+          protocol: tcp
+        - target: 8443
+          published: 8443
+          protocol: tcp
+      environment:
+        DB_VENDOR: mariadb
+        DB_ADDR: keycloak_db
+        DB_DATABASE: keycloak
+        DB_USER: root
+        DB_PASSWORD: root
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: admin
+        PROXY_ADDRESS_FORWARDING: "true"
+      depends_on:
+        - keycloak_db
+
 
 networks:
   dev:
 volumes:
+  php_socket:
+  caddy_data:
+  caddy_config:
+  keycloak_db_data:
   db-data:
