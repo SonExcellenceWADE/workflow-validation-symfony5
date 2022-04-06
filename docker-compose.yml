@@ -1,58 +1,70 @@
-version : "3.8"
+version: '3'
+
 services:
+####> doctrine/doctrine-bundle ###
+#  database:
+#    ports:
+#      - "5432"
+####< doctrine/doctrine-bundle ###
+#
+####> symfony/mailer ###
+  mailer:
+    image: schickling/mailcatcher
+    ports: [1025, 1080]
+###< symfony/mailer ###
 
- #Add image Mysql in Docker by Son Excellence WADE
+    #Add image Mysql Database in Docker by Son Excellence WADE
   db:
-    image: mysql
-    container_name: db_docker_workflow
-    restart: always
-    volumes:
-    - db-data:/var/lib/mysql
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    networks:
-      - dev
+      image: mysql
+      container_name: db_docker_workflow
+      restart: always
+      volumes:
+        - db-data:/var/lib/mysql
+      environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      networks:
+        - dev
 
 
-  #Add image Phpmyadmin in Docker by Son Excellence WADE
+    #Add image Phpmyadmin in Docker by Son Excellence WADE
   phpmyadmin:
-    image: phpmyadmin
-    container_name: phpmyadmin_docker_workflow
-    restart: always
-    depends_on:
-      - db
-    ports:
-    - 8000:80
-    environment:
-      PMA_HOST: db
-    networks:
-      - dev
+      image: phpmyadmin
+      container_name: phpmyadmin_docker_workflow
+      restart: always
+      depends_on:
+        - db
+      ports:
+        - 8000:80
+      environment:
+        PMA_HOST: db
+      networks:
+        - dev
 
-  #Add image Maildev in Docker by Son Excellence WADE
+    #Add image Maildev in Docker by Son Excellence WADE
   maildev:
-    image: maildev/maildev
-    container_name: maildev_docker_workflow
-    command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
-    ports:
-      - "8081:80"
-    restart: always
-    networks:
-      - dev
+      image: maildev/maildev
+      container_name: maildev_docker_workflow
+      command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+      ports:
+        - "8081:80"
+      restart: always
+      networks:
+        - dev
 
-  #Add image Php in Docker by Son Excellence WADE
+    #Add image Php in Docker by Son Excellence WADE
   www:
-    build: php
-    container_name: www_docker_workflow
-    ports:
-      - "8082:80"
-    volumes:
-      - ./php/vhosts:/etc/apache2/sites-enabled
-      - ./:/var/www
-    restart: always
-    networks:
-      - dev
+      build: php
+      container_name: www_docker_workflow
+      ports:
+        - "8082:80"
+      volumes:
+        - ./php/vhosts:/etc/apache2/sites-enabled
+        - ./:/var/www
+      restart: always
+      networks:
+        - dev
 
-  #Add image Mariadb for Keycloak in Docker by Son Excellence WADE
+    #Add image Mariadb for Keycloak in Docker by Son Excellence WADE
 
   keycloak_db:
       image: mariadb:latest
@@ -63,7 +75,7 @@ services:
       volumes:
         - keycloak_db_data:/var/lib/mysql:rw
 
-  #Add image Keycloak in Docker by Son Excellence WADE
+    #Add image Keycloak in Docker by Son Excellence WADE
 
   keycloak:
       image: jboss/keycloak:latest
@@ -91,8 +103,10 @@ services:
 networks:
   dev:
 volumes:
-  php_socket:
-  caddy_data:
-  caddy_config:
-  keycloak_db_data:
-  db-data:
+    php_socket:
+    caddy_data:
+    caddy_config:
+    keycloak_db_data:
+    db-data:
+
+
