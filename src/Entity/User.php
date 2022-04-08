@@ -65,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string|null
      */
 
-    private string $imageName;
+    private string $imageName = "test";
 
 
     public function __construct()
