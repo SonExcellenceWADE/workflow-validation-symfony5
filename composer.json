@@ -93,6 +93,12 @@
         "post-install-cmd": [
             "@auto-scripts"
         ],
+        "phpinsights": "vendor/bin/phpinsights --no-interaction",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon src --no-progress",
+        "analyse": [
+            "@phpinsights",
+            "@phpstan"
+        ],
         "post-update-cmd": [
             "@auto-scripts"
         ]
